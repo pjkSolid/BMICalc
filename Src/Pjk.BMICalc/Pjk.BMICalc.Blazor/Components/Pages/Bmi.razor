@@ -1,0 +1,46 @@
+@page "/bmi"
+@rendermode InteractiveServer
+
+<PageTitle>BMI Calculator</PageTitle>
+
+<h1>BMI Calculator</h1>
+
+<EditForm Model="@bmiModel" OnValidSubmit="@CalculateBMI">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="height">Height (cm):</label>
+        <InputNumber id="height" @bind-Value="bmiModel.Height" />
+    </div>
+    <div>
+        <label for="weight">Weight (kg):</label>
+        <InputNumber id="weight" @bind-Value="bmiModel.Weight" />
+    </div>
+    <button type="submit">Calculate BMI</button>
+</EditForm>
+
+@if (bmiModel.BMI > 0)
+{
+    <p>Your BMI is: @bmiModel.BMI</p>
+}
+
+@code {
+    private BMICalculatorModel bmiModel = new BMICalculatorModel();
+
+    private void CalculateBMI()
+    {
+        if (bmiModel.Height > 0 && bmiModel.Weight > 0)
+        {
+            var heightInMeters = bmiModel.Height / 100.0;
+            bmiModel.BMI = bmiModel.Weight / (heightInMeters * heightInMeters);
+        }
+    }
+
+    public class BMICalculatorModel
+    {
+        public double Height { get; set; }
+        public double Weight { get; set; }
+        public double BMI { get; set; }
+    }
+}
